@@ -1,0 +1,8 @@
+bootJar.enabled = true
+jar.enabled = false
+
+dependencies {
+    implementation project(":storage:mysql")
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+}
