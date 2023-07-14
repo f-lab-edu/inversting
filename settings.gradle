@@ -1,0 +1,12 @@
+pluginManagement {
+    plugins {
+        id 'org.springframework.boot' version "${springBootVersion}"
+        id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
+    }
+}
+
+rootProject.name = 'investing'
+include 'storage:mysql'
+include 'core:core-api'
+include 'core:core-batch'
+
