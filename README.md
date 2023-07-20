@@ -15,6 +15,14 @@
 - gradle
 - intelliJ
 
+## 예상 아키텍처
+
+<img width="548" alt="image" src="https://github.com/NohYeongHun/zero-gifticon/assets/24979159/6f217f9b-376f-45af-b5b5-ba491154a37e">
+
+## ERD 
+
+https://www.erdcloud.com/d/rQgnTmEjaaxAW6hH2
+
 ## Use Case
 
 ### 전체적인 룰
@@ -169,3 +177,4 @@
     2-1. 일반 회원 아이디 옆에 권한부여 버튼이 있다.  
     2-2. 버튼 클릭시, 일반회원에게 관리자 권한을 줄 수 있다.  
 3. 최초 관리자 접속시, OTP 등록 후 로그인
+
