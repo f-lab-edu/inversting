@@ -9,4 +9,7 @@ rootProject.name = 'investing'
 include 'storage:mysql'
 include 'core:core-api'
 include 'core:core-batch'
+include 'domain'
+include 'storage:h2'
+include 'storage:redis'
 
