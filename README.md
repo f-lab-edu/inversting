@@ -17,7 +17,7 @@
 
 ## 예상 아키텍처
 
-<img width="548" alt="image" src="https://github.com/NohYeongHun/zero-gifticon/assets/24979159/6f217f9b-376f-45af-b5b5-ba491154a37e">
+![image](https://github.com/NohYeongHun/zero-gifticon/assets/24979159/46caee93-130e-4571-a469-517a1380586e)
 
 ## ERD 
 
