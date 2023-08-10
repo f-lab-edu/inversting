@@ -1,7 +1,9 @@
 package com.flab.investing.stock.batch.application;
 
-import com.flab.investing.stock.batch.infrastructure.krx.dto.Item;
-import com.flab.investing.stock.batch.infrastructure.stock.StockDao;
+import com.flab.investing.stock.batch.domain.Stock;
+import com.flab.investing.stock.batch.domain.StockPrice;
+import com.flab.investing.stock.batch.domain.Token;
+import com.flab.investing.stock.batch.infrastructure.stock.StockMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +13,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StockService {
 
-    private final StockDao stockDao;
+    private final StockMapper stockMapper;
+    private final KisService kisService;
 
-    public void save(final List<Item> items) {
-        stockDao.save(items);
+    public void save(List<Stock> stocks) {
+        stockMapper.insert(stocks);
+    }
+
+    public void searchPrice(Stock stock, Token token) {
+        StockPrice price = kisService.getPrice(token, stock.getCode());
     }
 
 }
