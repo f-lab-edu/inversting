@@ -7,12 +7,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class KrxService {
 
-    private static final int searchCount = 10_000;
+    private static final int SEARCH_COUNT = 10_000;
+    private static final int DEFAULT_PAGE_NO = 1;
+    private static final String JSON = "json";
 
     private final KrxInfoClient krxInfoClient;
 
@@ -20,8 +24,8 @@ public class KrxService {
     private String key;
 
     public ApiResponse send() {
-        log.info("요청");
-        return krxInfoClient.getItemInfo(key, searchCount, 1);
+        log.info("한국 거래소 API 요청");
+        return krxInfoClient.getItemInfo(key, SEARCH_COUNT, DEFAULT_PAGE_NO, JSON);
     }
 
 }
