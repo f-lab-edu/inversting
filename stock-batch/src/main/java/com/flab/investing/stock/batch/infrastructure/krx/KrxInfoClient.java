@@ -12,6 +12,7 @@ public interface KrxInfoClient {
     @RequestMapping(method = RequestMethod.GET, value = "/getItemInfo")
     ApiResponse getItemInfo(@RequestParam("serviceKey") String serviceKey,
                             @RequestParam("numOfRows") int numOfRows,
-                            @RequestParam("pageNo") int pageNo);
+                            @RequestParam("pageNo") int pageNo,
+                            @RequestParam("resultType") String resultType);
 
 }
