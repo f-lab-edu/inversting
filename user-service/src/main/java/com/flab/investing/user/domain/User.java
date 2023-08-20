@@ -1,7 +1,7 @@
 package com.flab.investing.user.domain;
 
-import com.flab.investing.global.common.constant.UserRole;
-import com.flab.investing.global.common.constant.UserStatus;
+import com.flab.investing.user.common.constant.UserRole;
+import com.flab.investing.user.common.constant.UserStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
