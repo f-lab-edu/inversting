@@ -2,6 +2,7 @@ package com.flab.investing.global.error;
 
 import com.flab.investing.global.error.constant.ExceptionCode;
 import com.flab.investing.global.error.dto.ExceptionResponse;
+import com.flab.investing.global.error.exception.AuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -28,4 +29,11 @@ public class GlobalExceptionAdvice {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ExceptionResponse(ExceptionCode.CUSTOM_EXCEPTION.getCode(), e.getMessage()));
     }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ExceptionResponse> authenticationException(AuthenticationException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ExceptionResponse(exception.getCode(), exception.getMessage() ));
+    }
+
 }

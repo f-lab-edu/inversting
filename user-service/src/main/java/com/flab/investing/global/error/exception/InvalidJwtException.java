@@ -1,8 +1,11 @@
 package com.flab.investing.global.error.exception;
 
-public class InvalidJwtException extends RuntimeException{
+import com.flab.investing.global.error.constant.ExceptionCode;
+
+public class InvalidJwtException extends AuthenticationException {
 
     public InvalidJwtException() {
-        super("유효하지 않은 토큰을 사용하였습니다.");
+        super(ExceptionCode.INVALID_TOKEN.getCode(),
+                ExceptionCode.INVALID_TOKEN.getDescription());
     }
 }
