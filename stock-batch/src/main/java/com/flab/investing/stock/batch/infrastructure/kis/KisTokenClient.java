@@ -16,7 +16,10 @@ public interface KisTokenClient {
 
     @ResponseBody
     @GetMapping(value = "/uapi/domestic-stock/v1/quotations/inquire-price")
-    KisPriceResponse getPrice(@RequestHeader KisPriceHeaderRequest kisPriceHeaderRequest,
+    KisPriceResponse getPrice(@RequestHeader("appsecret") String appsecret,
+                              @RequestHeader("appkey") String appkey,
+                              @RequestHeader("authorization") String authorization,
+                              @RequestHeader("tr_id") String trId,
                               @RequestParam("FID_COND_MRKT_DIV_CODE") String marketCode,
                               @RequestParam("FID_INPUT_ISCD") String code);
 
