@@ -3,7 +3,6 @@ package com.flab.investing.support.jwt;
 import com.flab.investing.global.error.exception.ExpireJwtException;
 import com.flab.investing.global.error.exception.InvalidJwtException;
 import com.flab.investing.support.security.UserDetailsServiceImpl;
-import com.flab.investing.user.application.SessionService;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -24,8 +24,8 @@ public class JwtTokenProvider {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
 
-    private final SessionService sessionService;
     private final UserDetailsServiceImpl userDetailsService;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Value("${spring.jwt.secret}")
     private String secretKey;
@@ -61,9 +61,27 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
-        sessionService.save(authentication.getName(), refreshToken, refreshExpirationTime);
+        redisTemplate.opsForValue().set(authentication.getName(),
+                refreshToken,
+                refreshExpirationTime,
+                TimeUnit.MILLISECONDS);
 
         return refreshToken;
+    }
+
+    public String getRedisSession(String token) {
+        String subject = Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+
+        String refreshToken = redisTemplate.opsForValue().get(subject);
+        if(Objects.isNull(refreshToken)) {
+            return null;
+        }
+
+        return subject;
     }
 
     public Authentication getAuthentication(String token) {
@@ -88,11 +106,8 @@ public class JwtTokenProvider {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
-        } catch (ExpiredJwtException e) {
-            throw new ExpireJwtException();
-        } catch (JwtException e) {
-            throw new InvalidJwtException();
-        }
+        } catch (JwtException e) { }
+        return false;
     }
 
 }
