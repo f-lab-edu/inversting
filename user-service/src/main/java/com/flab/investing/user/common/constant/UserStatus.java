@@ -1,4 +1,4 @@
-package com.flab.investing.global.common.constant;
+package com.flab.investing.user.common.constant;
 
 public enum UserStatus {
     ACTIVE,     //  정상
