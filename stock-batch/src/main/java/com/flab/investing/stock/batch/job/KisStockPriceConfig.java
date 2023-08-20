@@ -10,16 +10,17 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
-public class KisStockPriceJob {
+public class KisStockPriceConfig {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final KisPriceTokenStep kisPriceTokenStep;
 
     @Bean
     public Job kisStockPriceJob() {
-        return jobBuilderFactory.get("kisStockPriceJob")
+        return jobBuilderFactory.get("kisStocksPriceJob")
                 .incrementer(new RunIdIncrementer())
-                .start(kisPriceTokenStep.kisPriceTokenStep())
+                .start(kisPriceTokenStep.kisTokenSearchStep())
+                .next(kisPriceTokenStep.getKisPriceStep())
                 .build();
     }
 
