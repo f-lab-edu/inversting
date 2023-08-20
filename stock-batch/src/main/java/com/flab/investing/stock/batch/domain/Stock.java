@@ -5,13 +5,15 @@ import lombok.Getter;
 @Getter
 public class Stock {
 
+    private Long id;
     private final String code;
     private final String shortCode;
     private final String name;
     private final String shortName;
     private final String corporationCode;
 
-    public Stock(String code, String shortCode, String name, String shortName, String corporationCode) {
+    public Stock(Long id, String code, String shortCode, String name, String shortName, String corporationCode) {
+        this.id = id;
         this.code = code;
         this.shortCode = shortCode;
         this.name = name;

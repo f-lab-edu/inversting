@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public class StockPrice {
 
+    private Long stockId;
     private String code;
     private String amount;
     private String status;  // 종목 상태 구분 코드
@@ -16,10 +17,11 @@ public class StockPrice {
     private String highLimit;  // 상한가
     private String lowerLimit; // 하한가
 
-    public StockPrice(String code, String amount, String status,
+    public StockPrice(Long stockId, String code, String amount, String status,
                       String sign, String totalAmount, String totalCount,
                       String stockHigh, String stockLower, String highLimit,
                       String lowerLimit) {
+        this.stockId = stockId;
         this.code = code;
         this.amount = amount;
         this.status = status;
