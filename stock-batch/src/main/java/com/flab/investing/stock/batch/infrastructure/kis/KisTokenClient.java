@@ -1,0 +1,23 @@
+package com.flab.investing.stock.batch.infrastructure.kis;
+
+import com.flab.investing.stock.batch.infrastructure.kis.dto.KisPriceHeaderRequest;
+import com.flab.investing.stock.batch.infrastructure.kis.dto.KisPriceResponse;
+import com.flab.investing.stock.batch.infrastructure.kis.dto.KisTokenRequest;
+import com.flab.investing.stock.batch.infrastructure.kis.dto.KisTokenResponse;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+
+@FeignClient(name = "kisToken", url= "${kis.url}")
+public interface KisTokenClient {
+
+    @PostMapping("/oauth2/tokenP")
+    KisTokenResponse getToken(@RequestBody KisTokenRequest request);
+
+    @ResponseBody
+    @GetMapping(value = "/uapi/domestic-stock/v1/quotations/inquire-price")
+    KisPriceResponse getPrice(@RequestHeader KisPriceHeaderRequest kisPriceHeaderRequest,
+                              @RequestParam("FID_COND_MRKT_DIV_CODE") String marketCode,
+                              @RequestParam("FID_INPUT_ISCD") String code);
+
+}
