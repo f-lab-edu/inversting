@@ -27,7 +27,7 @@ public class StockInformationTasklet implements Tasklet {
 
         List<Stock> stocks = response.response().body().items().item()
                 .stream()
-                .map(item -> new Stock(item.isinCd(), item.srtnCd(), item.corpNm(), item.itmsNm(), item.crno()))
+                .map(item -> new Stock(null, item.isinCd(), item.srtnCd(), item.corpNm(), item.itmsNm(), item.crno()))
                 .collect(Collectors.toList());
 
         stockService.save(stocks);

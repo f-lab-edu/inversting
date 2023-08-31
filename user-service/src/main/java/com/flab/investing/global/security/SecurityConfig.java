@@ -49,6 +49,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(mvcMatcherBuilder.pattern("/user/register")).permitAll()
                         .requestMatchers(mvcMatcherBuilder.pattern("/user/login")).permitAll()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/user/validate")).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -14,5 +14,6 @@ public record RegisterRequest(
         @NotBlank(message = "빈값은 넣을 수 없습니다.")
         String confirmPassword,
 
-        @NotBlank(message = "빈값은 넣을 수 없습니다.") String name) {
+        @NotBlank(message = "빈값은 넣을 수 없습니다.")
+        String name) {
 }

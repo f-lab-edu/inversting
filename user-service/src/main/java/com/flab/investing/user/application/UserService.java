@@ -25,7 +25,7 @@ public class UserService {
         User user = User.builder()
                 .userId(request.userId())
                 .password(passwordEncoder.encode(request.password()))
-                .name(request.getName())
+                .name(request.name())
                 .build();
 
         userRepository.save(user);
