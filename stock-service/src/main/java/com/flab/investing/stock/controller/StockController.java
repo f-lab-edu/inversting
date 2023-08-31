@@ -6,9 +6,11 @@ import com.flab.investing.stock.application.TradeMessageService;
 import com.flab.investing.stock.application.UserService;
 import com.flab.investing.stock.application.dto.PurchaseRequest;
 import com.flab.investing.stock.controller.request.StockPurchaseRequest;
+import com.flab.investing.stock.controller.response.ResponseCode;
 import com.flab.investing.stock.controller.response.StockInfoResponse;
 import com.flab.investing.stock.controller.response.StockPurchaseResponse;
 import com.flab.investing.stock.controller.response.StocksResponse;
+import com.flab.investing.stock.domain.Stock;
 import com.flab.investing.stock.infrastructure.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.flab.investing.stock.controller.response.ResponseCode.SUCCESS;
 
 @RestController
 @RequestMapping("/stock")
@@ -29,19 +34,33 @@ public class StockController {
 
     @GetMapping("/list")
     public ResponseEntity<List<StocksResponse>> stockList(@PageableDefault(size = 7) Pageable pageable) {
-        return ResponseEntity.ok(stockService.findAllPageable(pageable));
+        return ResponseEntity.ok(stockService.findAllPageable(pageable).stream()
+                .map(stock -> new StocksResponse(stock.getId(), stock.getCode(), stock.getName(), stock.getPrice()))
+                .collect(Collectors.toList()));
     }
 
     @GetMapping("/{stockId}")
     public ResponseEntity<StockInfoResponse> stockInfo(@PathVariable Long stockId) {
-        return ResponseEntity.ok(stockService.findByStockId(stockId));
+        Stock stock = stockService.findByStockId(stockId);
+
+        return ResponseEntity.ok(new StockInfoResponse(
+                stock.getId(),
+                stock.getName(),
+                stock.getCorporationCode(),
+                stock.getStatus(),
+                stock.getPrice(),
+                stock.getStockHigh(),
+                stock.getStockLower(),
+                stock.getHighLimit(),
+                stock.getLowerLimit()
+        ));
     }
 
     @PostMapping("/purchase")
     public ResponseEntity<StockPurchaseResponse> purchase(@RequestHeader String accessToken,
                                                           @RequestBody StockPurchaseRequest request) {
-        UserResponse userResponse = userService.tokenSend(accessToken);
-        if(!"0000".equals(userResponse.code())) {
+        final UserResponse userResponse = userService.tokenSend(accessToken);
+        if(!SUCCESS.getCode().equals(userResponse.code())) {
             throw new InvalidJwtException(userResponse.message());
         }
 
@@ -53,7 +72,7 @@ public class StockController {
         ));
 
         return ResponseEntity.ok(new StockPurchaseResponse(
-                "0000", "정상 체결되었습니다.", request.stockId(),
+                SUCCESS.getCode(), SUCCESS.getMessage(), request.stockId(),
                 request.stockCount() * request.stockOfAmount(), request.stockOfAmount(), request.stockCount()));
     }
 

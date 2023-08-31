@@ -12,7 +12,7 @@ public class UserService {
 
     private final UserServiceClient userServiceClient;
 
-    public UserResponse tokenSend(String accessToken) {
+    public UserResponse tokenSend(final String accessToken) {
         return userServiceClient.tokenValidate(new UserRequest(accessToken));
     }
 

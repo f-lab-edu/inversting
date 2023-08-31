@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.flab.investing.stock.batch.infrastructure.stock.StockMapper">
+    <insert id="insert" parameterType="com.flab.investing.stock.batch.domain.Stock">
+        INSERT INTO stock (
+            code,
+            short_code,
+            name,
+            short_name,
+            corporation_code )
+        VALUES
+        <foreach collection="list" item="item" open="(" close=")" separator=") , (">
+            #{item.code},
+            #{item.shortCode},
+            #{item.name},
+            #{item.shortName},
+            #{item.corporationCode}
+        </foreach>
+    </insert>
+
+    <select id="findAll" resultType="com.flab.investing.stock.batch.domain.Stock">
+        SELECT id,
+               code,
+               short_code,
+               name,
+               short_name,
+               corporation_code
+          FROM stock
+         LIMIT 1000
+    </select>
+
+    <update id="updatePrice" parameterType="com.flab.investing.stock.batch.domain.StockPrice">
+        UPDATE stock
+           SET PRICE = #{amount}
+         WHERE code = #{code}
+    </update>
+
+</mapper>

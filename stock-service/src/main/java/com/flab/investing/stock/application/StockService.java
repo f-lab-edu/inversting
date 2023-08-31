@@ -1,8 +1,8 @@
 package com.flab.investing.stock.application;
 
-import com.flab.investing.stock.controller.response.StockInfoResponse;
-import com.flab.investing.stock.controller.response.StocksResponse;
-import com.flab.investing.stock.repository.StockCustomRepository;
+import com.flab.investing.global.error.exception.NotFoundStockException;
+import com.flab.investing.stock.domain.Stock;
+import com.flab.investing.stock.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,14 +13,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StockService {
 
-    private final StockCustomRepository stockRepository;
+    private final StockRepository stockRepository;
 
-    public List<StocksResponse> findAllPageable(Pageable pageable) {
-        return stockRepository.findAllByPageable(pageable);
+    public List<Stock> findAllPageable(final Pageable pageable) {
+        return stockRepository.findAll(pageable).getContent();
     }
 
-    public StockInfoResponse findByStockId(Long stockId) {
-        return stockRepository.findByStockId(stockId);
+    public Stock findByStockId(final Long stockId) {
+        return stockRepository.findById(stockId)
+                .orElseThrow(() -> new NotFoundStockException());
     }
 
 }
