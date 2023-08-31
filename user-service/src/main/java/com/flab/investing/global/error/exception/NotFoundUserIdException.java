@@ -1,8 +1,10 @@
 package com.flab.investing.global.error.exception;
 
+import static com.flab.investing.global.error.exception.constant.ExceptionMessage.NOTFOUND_USER;
+
 public class NotFoundUserIdException extends RuntimeException{
 
     public NotFoundUserIdException() {
-        super("유저아이디를 찾을 수 없습니다.");
+        super(NOTFOUND_USER.getMessage());
     }
 }

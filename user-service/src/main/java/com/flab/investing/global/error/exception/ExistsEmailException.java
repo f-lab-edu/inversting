@@ -1,8 +1,10 @@
 package com.flab.investing.global.error.exception;
 
+import static com.flab.investing.global.error.exception.constant.ExceptionMessage.ALREADY_EMAIL;
+
 public class ExistsEmailException extends RuntimeException {
 
     public ExistsEmailException() {
-        super("이미 등록된 이메일이 존재합니다.");
+        super(ALREADY_EMAIL.getMessage());
     }
 }

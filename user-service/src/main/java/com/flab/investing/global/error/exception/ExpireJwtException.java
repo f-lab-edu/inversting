@@ -1,8 +1,10 @@
 package com.flab.investing.global.error.exception;
 
+import static com.flab.investing.global.error.exception.constant.ExceptionMessage.EXPIRED_TOKEN;
+
 public class ExpireJwtException extends RuntimeException{
 
     public ExpireJwtException() {
-        super("유효시간이 지난 토큰을 사용하였습니다.");
+        super(EXPIRED_TOKEN.getMessage());
     }
 }
