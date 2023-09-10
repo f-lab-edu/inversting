@@ -17,16 +17,13 @@ import com.flab.investing.user.controller.response.UserResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.Objects;
 
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -40,7 +37,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @PostMapping("/register")
+    @PostMapping
     public ResponseEntity<RegisterResponse> logout(@Valid @RequestBody RegisterRequest request) {
         if (!request.password().equals(request.confirmPassword())) {
             throw new NotMatchPasswordException();
@@ -72,7 +69,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @PostMapping("/validate")
+    @GetMapping
     public ResponseEntity<UserResponse> validate(@RequestBody JwtRequest request) {
         if (!jwtTokenProvider.validateToken(request.accessToken())) {
             throw new InvalidJwtException();
@@ -84,7 +81,12 @@ public class UserController {
             throw new NotFoundSessionException();
         }
 
-        return ResponseEntity.ok(new UserResponse(ExceptionCode.SUCCESS.getCode(), ExceptionCode.SUCCESS.getDescription(), userName));
+
+        return ResponseEntity.ok(new UserResponse(
+                ExceptionCode.SUCCESS.getCode(),
+                ExceptionCode.SUCCESS.getDescription(),
+                userService.getUserId(userName),
+                userName));
     }
 
 }
