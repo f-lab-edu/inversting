@@ -1,10 +1,12 @@
 package com.flab.investing.stock.application;
 
-import com.flab.investing.stock.application.dto.PurchaseRequest;
+import com.flab.investing.stock.common.TradeCode;
+import com.flab.investing.stock.application.dto.TradeRequest;
+import com.flab.investing.stock.controller.request.StockPurchaseRequest;
+import com.flab.investing.stock.dao.TradeDao;
+import com.flab.investing.stock.infrastructure.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -12,16 +14,18 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TradeMessageService {
 
-    @Value("${rabbitmq.exchange.name}")
-    private String exchangeName;
+    private final TradeDao tradeDao;
 
-    @Value("${rabbitmq.routing.key}")
-    private String routingKey;
+    public void purchaseSend(UserResponse userResponse, StockPurchaseRequest request, Long tradeId) {
+        TradeRequest tradeRequest = new TradeRequest(
+                tradeId,
+                request.stockId(),
+                userResponse.userId(),
+                request.stockOfAmount(),
+                request.stockCount(),
+                TradeCode.BUY
+        );
 
-    private final RabbitTemplate rabbitTemplate;
-
-    public void purchaseSend(PurchaseRequest purchaseRequest) {
-        log.info("message sent: {}", purchaseRequest);
-        rabbitTemplate.convertAndSend(exchangeName, routingKey, purchaseRequest);
+        tradeDao.purchaseSend(tradeRequest);
     }
 }

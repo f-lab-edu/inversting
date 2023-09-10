@@ -3,10 +3,11 @@ package com.flab.investing.stock.controller;
 import com.flab.investing.global.error.exception.InvalidJwtException;
 import com.flab.investing.stock.application.StockService;
 import com.flab.investing.stock.application.TradeMessageService;
+import com.flab.investing.stock.application.TradeService;
 import com.flab.investing.stock.application.UserService;
-import com.flab.investing.stock.application.dto.PurchaseRequest;
+import com.flab.investing.stock.application.dto.TradeData;
+import com.flab.investing.stock.common.DivisionStatus;
 import com.flab.investing.stock.controller.request.StockPurchaseRequest;
-import com.flab.investing.stock.controller.response.ResponseCode;
 import com.flab.investing.stock.controller.response.StockInfoResponse;
 import com.flab.investing.stock.controller.response.StockPurchaseResponse;
 import com.flab.investing.stock.controller.response.StocksResponse;
@@ -24,15 +25,16 @@ import java.util.stream.Collectors;
 import static com.flab.investing.stock.controller.response.ResponseCode.SUCCESS;
 
 @RestController
-@RequestMapping("/stock")
+@RequestMapping("/stocks")
 @RequiredArgsConstructor
 public class StockController {
 
     private final StockService stockService;
     private final UserService userService;
+    private final TradeService tradeService;
     private final TradeMessageService tradeMessageService;
 
-    @GetMapping("/list")
+    @GetMapping
     public ResponseEntity<List<StocksResponse>> stockList(@PageableDefault(size = 7) Pageable pageable) {
         return ResponseEntity.ok(stockService.findAllPageable(pageable).stream()
                 .map(stock -> new StocksResponse(stock.getId(), stock.getCode(), stock.getName(), stock.getPrice()))
@@ -56,7 +58,7 @@ public class StockController {
         ));
     }
 
-    @PostMapping("/purchase")
+    @PostMapping("/purchases")
     public ResponseEntity<StockPurchaseResponse> purchase(@RequestHeader String accessToken,
                                                           @RequestBody StockPurchaseRequest request) {
         final UserResponse userResponse = userService.tokenSend(accessToken);
@@ -64,12 +66,15 @@ public class StockController {
             throw new InvalidJwtException(userResponse.message());
         }
 
-        tradeMessageService.purchaseSend(new PurchaseRequest(
+        Long tradeId = tradeService.saveAndGetId(new TradeData(
                 request.stockId(),
-                userResponse.name(),
+                userResponse.userId(),
+                request.stockCount(),
                 request.stockOfAmount(),
-                request.stockCount()
+                DivisionStatus.BUY
         ));
+
+        tradeMessageService.purchaseSend(userResponse, request, tradeId);
 
         return ResponseEntity.ok(new StockPurchaseResponse(
                 SUCCESS.getCode(), SUCCESS.getMessage(), request.stockId(),
