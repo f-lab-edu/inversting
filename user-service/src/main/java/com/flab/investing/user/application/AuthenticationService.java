@@ -1,5 +1,6 @@
 package com.flab.investing.user.application;
 
+import com.flab.investing.global.error.constant.ExceptionCode;
 import com.flab.investing.support.jwt.JwtTokenProvider;
 import com.flab.investing.user.controller.request.LoginRequest;
 import com.flab.investing.user.controller.response.LoginResponse;
@@ -25,6 +26,8 @@ public class AuthenticationService {
         );
 
         return new LoginResponse(
+                ExceptionCode.SUCCESS.getCode(),
+                ExceptionCode.SUCCESS.getDescription(),
                 jwtTokenProvider.createAccessToken(authentication),
                 jwtTokenProvider.createRefreshToken(authentication));
     }
