@@ -1,15 +1,14 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.1.2'
-    id 'io.spring.dependency-management' version '1.1.2'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'org.asciidoctor.jvm.convert'
+    id 'jacoco'
 }
 
-group = 'com.flab.investing'
-version = '0.0.1-SNAPSHOT'
-
-java {
-    sourceCompatibility = '17'
-}
+group = "${projectGroup}"
+version = "${applicationVersion}"
+sourceCompatibility = "${javaVersion}"
 
 ext {
     set('springCloudVersion', "2022.0.4")
@@ -19,19 +18,20 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    asciidoctorExtensions
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.3'
-    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation "com.google.guava:guava:${guavaVersion}"
 
-    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
-    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+    implementation "org.springframework.cloud:spring-cloud-starter-openfeign:${openFeignVersion}"
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -40,6 +40,10 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'com.playtika.testcontainers:embedded-rabbitmq'
+    testImplementation "io.rest-assured:rest-assured:${restAssuredVersion}"
+    testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
+    asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 }
 
 dependencyManagement {
@@ -48,24 +52,36 @@ dependencyManagement {
     }
 }
 
-tasks.named('test') {
+ext {
+    set('snippetsDir', file("build/generated-snippets"))
+}
+
+test {
+    outputs.dir snippetsDir
     useJUnitPlatform()
+    finalizedBy 'asciidoctor'
+    finalizedBy 'jacocoTestReport'
 }
 
-// Querydsl 설정부
-def generated = 'src/main/generated'
-
-// querydsl QClass 파일 생성 위치를 지정
-tasks.withType(JavaCompile) {
-    options.getGeneratedSourceOutputDirectory().set(file(generated))
+// jacoco
+jacoco {
+    toolVersion = "0.8.7"
 }
 
-// java source set 에 querydsl QClass 위치 추가
-sourceSets {
-    main.java.srcDirs += [ generated ]
+jacocoTestReport {
+    reports {
+        xml.required = true
+        csv.required = true
+        html.required = true
+    }
 }
 
-// gradle clean 시에 QClass 디렉토리 삭제
-clean {
-    delete file(generated)
+asciidoctor.doFirst {
+    delete file('src/main/resources/static/docs')
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    configurations 'asciidoctorExtensions'
+    dependsOn test
 }
