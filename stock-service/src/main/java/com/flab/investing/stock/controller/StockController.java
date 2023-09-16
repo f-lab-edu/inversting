@@ -7,7 +7,9 @@ import com.flab.investing.stock.application.TradeService;
 import com.flab.investing.stock.application.UserService;
 import com.flab.investing.stock.application.dto.TradeData;
 import com.flab.investing.stock.common.DivisionStatus;
+import com.flab.investing.stock.common.ExceptionCode;
 import com.flab.investing.stock.controller.request.StockPurchaseRequest;
+import com.flab.investing.stock.controller.response.ResultResponse;
 import com.flab.investing.stock.controller.response.StockInfoResponse;
 import com.flab.investing.stock.controller.response.StockPurchaseResponse;
 import com.flab.investing.stock.controller.response.StocksResponse;
@@ -35,17 +37,23 @@ public class StockController {
     private final TradeMessageService tradeMessageService;
 
     @GetMapping
-    public ResponseEntity<List<StocksResponse>> stockList(@PageableDefault(size = 7) Pageable pageable) {
-        return ResponseEntity.ok(stockService.findAllPageable(pageable).stream()
+    public ResponseEntity<ResultResponse<StocksResponse>> stockList(@PageableDefault(size = 7) Pageable pageable) {
+        List<StocksResponse> stockList = stockService.findAllPageable(pageable).stream()
                 .map(stock -> new StocksResponse(stock.getId(), stock.getCode(), stock.getName(), stock.getPrice()))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(new ResultResponse(
+                ExceptionCode.SUCCESS.getCode(),
+                ExceptionCode.SUCCESS.getDescription(),
+                stockList
+        ));
     }
 
     @GetMapping("/{stockId}")
-    public ResponseEntity<StockInfoResponse> stockInfo(@PathVariable Long stockId) {
+    public ResponseEntity<ResultResponse<StockInfoResponse>> stockInfo(@PathVariable Long stockId) {
         Stock stock = stockService.findByStockId(stockId);
 
-        return ResponseEntity.ok(new StockInfoResponse(
+        StockInfoResponse stockInfoResponse = new StockInfoResponse(
                 stock.getId(),
                 stock.getName(),
                 stock.getCorporationCode(),
@@ -55,6 +63,12 @@ public class StockController {
                 stock.getStockLower(),
                 stock.getHighLimit(),
                 stock.getLowerLimit()
+        );
+
+        return ResponseEntity.ok(new ResultResponse(
+                ExceptionCode.SUCCESS.getCode(),
+                ExceptionCode.SUCCESS.getDescription(),
+                stockInfoResponse
         ));
     }
 

@@ -48,4 +48,17 @@ public class Stock extends BaseTimeEntity {
     @Column(name = "status")
     private String status;
 
+    public Stock(String code, String shortCode, String name, String shortName, String corporationCode, Integer stockHigh, Integer stockLower, Integer highLimit, Integer lowerLimit, Integer price) {
+        this.code = code;
+        this.shortCode = shortCode;
+        this.name = name;
+        this.shortName = shortName;
+        this.corporationCode = corporationCode;
+        this.stockHigh = stockHigh;
+        this.stockLower = stockLower;
+        this.highLimit = highLimit;
+        this.lowerLimit = lowerLimit;
+        this.price = price;
+        this.status = "RUNNING";
+    }
 }
