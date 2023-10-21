@@ -3,6 +3,7 @@ package com.flab.investing.stock.application;
 import com.flab.investing.stock.common.TradeCode;
 import com.flab.investing.stock.application.dto.TradeRequest;
 import com.flab.investing.stock.controller.request.StockPurchaseRequest;
+import com.flab.investing.stock.controller.request.StockSellRequest;
 import com.flab.investing.stock.dao.TradeDao;
 import com.flab.investing.stock.infrastructure.response.UserResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,19 @@ public class TradeMessageService {
                 TradeCode.BUY
         );
 
-        tradeDao.purchaseSend(tradeRequest);
+        tradeDao.orderSend(tradeRequest);
+    }
+
+    public void sellSend(UserResponse userResponse, StockSellRequest request, Long tradeId) {
+        TradeRequest tradeRequest = new TradeRequest(
+                tradeId,
+                request.stockId(),
+                userResponse.userId(),
+                request.stockOfAmount(),
+                request.stockCount(),
+                TradeCode.SELL
+        );
+
+        tradeDao.orderSend(tradeRequest);
     }
 }

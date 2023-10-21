@@ -21,7 +21,7 @@ public class RabbitMqRepository {
 
     private final RabbitTemplate rabbitTemplate;
 
-    public void purchaseSend(TradeRequest tradeRequest) {
+    public void oderSend(TradeRequest tradeRequest) {
         log.info("message sent: {}", tradeRequest);
         rabbitTemplate.convertAndSend(exchangeName, routingKey, tradeRequest);
     }

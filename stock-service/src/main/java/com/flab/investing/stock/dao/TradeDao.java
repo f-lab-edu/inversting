@@ -13,10 +13,9 @@ public class TradeDao {
 
     private final RabbitMqRepository rabbitMqRepository;
 
-    public void purchaseSend(TradeRequest tradeRequest) {
-        log.info("====== 구매 요청 ====> {}", tradeRequest);
-        rabbitMqRepository.purchaseSend(tradeRequest);
-        log.info("====== 구매 요청 성공");
+    public void orderSend(TradeRequest tradeRequest) {
+        log.info("====== 주식 주문 요청 ====> {}", tradeRequest);
+        rabbitMqRepository.oderSend(tradeRequest);
     }
 
 }
