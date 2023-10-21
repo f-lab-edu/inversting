@@ -31,8 +31,8 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public Long getUserId(String userName) {
-        return userRepository.findByName(userName)
+    public Long getUserId(String userId) {
+        return userRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이디입니다."))
                 .getId();
     }

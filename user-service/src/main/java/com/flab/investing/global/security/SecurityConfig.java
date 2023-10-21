@@ -47,9 +47,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.disable())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(mvcMatcherBuilder.pattern("/user/register")).permitAll()
-                        .requestMatchers(mvcMatcherBuilder.pattern("/user/login")).permitAll()
-                        .requestMatchers(mvcMatcherBuilder.pattern("/user/validate")).permitAll()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/users")).permitAll()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/users/login")).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
