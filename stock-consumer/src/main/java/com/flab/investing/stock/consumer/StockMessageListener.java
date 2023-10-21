@@ -2,6 +2,7 @@ package com.flab.investing.stock.consumer;
 
 import com.flab.investing.stock.application.PurchaseService;
 import com.flab.investing.stock.application.SalesService;
+import com.flab.investing.stock.application.TradeService;
 import com.flab.investing.stock.common.StockStatus;
 import com.flab.investing.stock.common.TradeCode;
 import com.flab.investing.stock.consumer.dto.TradeResponse;
@@ -19,12 +20,21 @@ public class StockMessageListener {
 
     private final PurchaseService purchaseService;
     private final SalesService salesService;
+    private final TradeService tradeService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @RabbitListener(queues = "${rabbitmq.queue.name}")
     public void receiveMessage(final TradeResponse tradeResponse) {
         log.info("rabbitmq 받은값 ====> {}", tradeResponse);
 
+        if(!tradeService.isExistTradeAndHoldStatus(tradeResponse.tradeId())) {
+            return;
+        }
+
+        this.process(tradeResponse);
+    }
+
+    private void process(final TradeResponse tradeResponse) {
         try {
             if (TradeCode.BUY.equals(tradeResponse.tradeCode())) {
                 purchaseService.purchase(tradeResponse);
@@ -32,6 +42,7 @@ public class StockMessageListener {
             }
 
             salesService.sales(tradeResponse);
+
         } catch (Exception e) {
             log.error("에러가 발생하였습니다. [{}]", e.getMessage());
             applicationEventPublisher.publishEvent(new TradeException(
