@@ -7,7 +7,7 @@ public enum StockStatus {
 
     ON_HOLD("대기중"),
     EXECUTION("체결"),
-    EXCEPTION("에러발생");
+    ROOLBACK("롤백");
 
     private final String value;
 

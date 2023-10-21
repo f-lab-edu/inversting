@@ -1,5 +1,6 @@
 package com.flab.investing.stock.application;
 
+import com.flab.investing.global.error.exception.NotFoundTradeException;
 import com.flab.investing.stock.application.dto.TradeData;
 import com.flab.investing.stock.common.DivisionStatus;
 import com.flab.investing.stock.domain.Trade;
@@ -15,7 +16,6 @@ public class TradeService {
 
     private final TradeRepository tradeRepository;
 
-    @Transactional
     public Long saveAndGetId(TradeData tradeData) {
         Trade trade = tradeRepository.save(new Trade(
                 tradeData.stockId(),
@@ -27,6 +27,13 @@ public class TradeService {
         ));
 
         return trade.getId();
+    }
+
+    public void rollbackTrade(Long tradeId) {
+        Trade trade = tradeRepository.findById(tradeId)
+                .orElseThrow(() -> new NotFoundTradeException());
+
+        trade.rollback();
     }
 
 }
