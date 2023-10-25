@@ -24,16 +24,16 @@
                code,
                short_code,
                name,
+               price,
                short_name,
                corporation_code
           FROM stock
-         LIMIT 1000
     </select>
 
     <update id="updatePrice" parameterType="com.flab.investing.stock.batch.domain.StockPrice">
         UPDATE stock
-           SET PRICE = #{amount}
-         WHERE code = #{code}
+           SET price = #{amount}
+        WHERE code = #{code}
     </update>
 
 </mapper>
