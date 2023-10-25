@@ -56,14 +56,7 @@ dependencyManagement {
 }
 
 tasks.named('test') {
-=======
-ext {
-    set('snippetsDir', file("build/generated-snippets"))
-}
 
-test {
-    outputs.dir snippetsDir
->>>>>>> develop
     useJUnitPlatform()
     finalizedBy 'asciidoctor'
     finalizedBy 'jacocoTestReport'
