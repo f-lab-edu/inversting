@@ -8,7 +8,6 @@ import com.flab.investing.stock.application.UserService;
 import com.flab.investing.stock.application.dto.TradeData;
 import com.flab.investing.stock.common.DivisionStatus;
 import com.flab.investing.stock.controller.request.StockPurchaseRequest;
-import com.flab.investing.stock.controller.request.StockSellRequest;
 import com.flab.investing.stock.controller.response.StockInfoResponse;
 import com.flab.investing.stock.controller.response.StockPurchaseResponse;
 import com.flab.investing.stock.controller.response.StocksResponse;
@@ -76,29 +75,6 @@ public class StockController {
         ));
 
         tradeMessageService.purchaseSend(userResponse, request, tradeId);
-
-        return ResponseEntity.ok(new StockPurchaseResponse(
-                SUCCESS.getCode(), SUCCESS.getMessage(), request.stockId(),
-                request.stockCount() * request.stockOfAmount(), request.stockOfAmount(), request.stockCount()));
-    }
-
-    @PostMapping("/selles")
-    public ResponseEntity<StockPurchaseResponse> selles(@RequestHeader String accessToken,
-                                                        @RequestBody StockSellRequest request) {
-        final  UserResponse userResponse = userService.tokenSend(accessToken);
-        if(!SUCCESS.getCode().equals(userResponse.code())) {
-            throw new InvalidJwtException(userResponse.message());
-        }
-
-        Long tradeId = tradeService.saveAndGetId(new TradeData(
-                request.stockId(),
-                userResponse.userId(),
-                request.stockCount(),
-                request.stockOfAmount(),
-                DivisionStatus.SELL
-        ));
-
-        tradeMessageService.sellSend(userResponse, request, tradeId);
 
         return ResponseEntity.ok(new StockPurchaseResponse(
                 SUCCESS.getCode(), SUCCESS.getMessage(), request.stockId(),
