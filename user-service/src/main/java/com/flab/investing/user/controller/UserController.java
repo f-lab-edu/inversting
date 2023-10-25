@@ -38,7 +38,7 @@ public class UserController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<RegisterResponse> logout(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
         if (!request.password().equals(request.confirmPassword())) {
             throw new NotMatchPasswordException();
         }
@@ -49,7 +49,7 @@ public class UserController {
         userService.register(request);
 
         return ResponseEntity.created(URI.create("/user/" + request.userId()))
-                .body(new RegisterResponse("이메일 인증후, 사용해 주세요."));
+                .body(new RegisterResponse(ExceptionCode.SUCCESS.getCode(), ExceptionCode.SUCCESS.getDescription()));
     }
 
     /**
@@ -75,18 +75,17 @@ public class UserController {
             throw new InvalidJwtException();
         }
 
-        String userName = jwtTokenProvider.getRedisSession(request.accessToken());
+        String userId = jwtTokenProvider.getRedisSession(request.accessToken());
 
-        if (Objects.isNull(userName)) {
+        if (Objects.isNull(userId)) {
             throw new NotFoundSessionException();
         }
-
 
         return ResponseEntity.ok(new UserResponse(
                 ExceptionCode.SUCCESS.getCode(),
                 ExceptionCode.SUCCESS.getDescription(),
-                userService.getUserId(userName),
-                userName));
+                userService.getUserId(userId),
+                userId));
     }
 
 }
