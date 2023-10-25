@@ -1,15 +1,14 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.1.2'
-    id 'io.spring.dependency-management' version '1.1.2'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'org.asciidoctor.jvm.convert'
+    id 'jacoco'
 }
 
-group = 'com.flab.investing'
-version = '0.0.1-SNAPSHOT'
-
-java {
-    sourceCompatibility = '17'
-}
+group = "${projectGroup}"
+version = "${applicationVersion}"
+sourceCompatibility = "${javaVersion}"
 
 ext {
     set('springCloudVersion', "2022.0.4")
@@ -17,6 +16,10 @@ ext {
 
 repositories {
     mavenCentral()
+}
+
+configurations {
+    asciidoctorExtensions
 }
 
 dependencies {
@@ -28,9 +31,10 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-    implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
-    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    implementation "io.jsonwebtoken:jjwt-api:${jwtVersion}"
+    implementation "io.jsonwebtoken:jjwt-impl:${jwtVersion}"
+    implementation "io.jsonwebtoken:jjwt-jackson:${jwtVersion}"
+    implementation "com.google.guava:guava:${guavaVersion}"
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -38,8 +42,13 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "io.rest-assured:rest-assured:${restAssuredVersion}"
+    testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
+    testImplementation("it.ozimov:embedded-redis:${embeddedRedis}") { exclude group: "org.slf4j", module: "slf4j-simple" }
+    asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 }
 
+<<<<<<< HEAD
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
@@ -47,5 +56,38 @@ dependencyManagement {
 }
 
 tasks.named('test') {
+=======
+ext {
+    set('snippetsDir', file("build/generated-snippets"))
+}
+
+test {
+    outputs.dir snippetsDir
+>>>>>>> develop
     useJUnitPlatform()
+    finalizedBy 'asciidoctor'
+    finalizedBy 'jacocoTestReport'
+}
+
+// jacoco
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+        csv.required = true
+        html.required = true
+    }
+}
+
+asciidoctor.doFirst {
+    delete file('src/main/resources/static/docs')
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    configurations 'asciidoctorExtensions'
+    dependsOn test
 }

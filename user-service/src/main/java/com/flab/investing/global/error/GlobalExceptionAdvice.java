@@ -17,8 +17,9 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> validateException(MethodArgumentNotValidException e) {
         String message = e.getFieldErrors().stream()
-                .map(error -> error.getField() + ":" + error.getDefaultMessage())
-                .collect(Collectors.joining("\n ,"));
+                .map(error -> error.getField() + "은(는)" + error.getDefaultMessage())
+                .findFirst()
+                .orElseGet(() -> "");
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ExceptionResponse(ExceptionCode.BAD_REQUEST.getCode(), message));
