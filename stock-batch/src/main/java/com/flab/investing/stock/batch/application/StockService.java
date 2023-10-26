@@ -16,12 +16,12 @@ public class StockService {
     private final StockMapper stockMapper;
     private final KisService kisService;
 
-    public void save(List<Stock> stocks) {
+    public void save(final List<Stock> stocks) {
         stockMapper.insert(stocks);
     }
 
-    public void searchPrice(Stock stock, Token token) {
-        StockPrice price = kisService.getPrice(token, stock.getCode());
+    public StockPrice searchPrice(final Stock stock, final Token token) {
+        return kisService.getPrice(token, stock);
     }
 
 }

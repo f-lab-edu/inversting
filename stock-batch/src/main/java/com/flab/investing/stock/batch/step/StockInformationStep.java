@@ -4,7 +4,8 @@ import com.flab.investing.stock.batch.step.tasklet.StockInformationTasklet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -14,16 +15,14 @@ import org.springframework.transaction.PlatformTransactionManager;
 @RequiredArgsConstructor
 public class StockInformationStep {
 
-    private final PlatformTransactionManager transactionManager;
-
-    private final StepBuilderFactory stepBuilderFactory;
     private final StockInformationTasklet stockInformationTasklet;
+    private final JobRepository jobRepository;
+    private final PlatformTransactionManager transactionManager;
 
     @Bean
     public Step stcokInformationStep() {
-        return stepBuilderFactory.get("stcokInformationStep")
-                .tasklet(stockInformationTasklet)
-                .transactionManager(transactionManager)
+        return new StepBuilder("stockInformationStep", jobRepository)
+                .tasklet(stockInformationTasklet, transactionManager)
                 .build();
     }
 

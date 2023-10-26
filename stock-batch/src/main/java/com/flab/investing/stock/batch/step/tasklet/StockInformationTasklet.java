@@ -11,6 +11,7 @@ import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,7 @@ public class StockInformationTasklet implements Tasklet {
 
         List<Stock> stocks = response.response().body().items().item()
                 .stream()
-                .map(item -> new Stock(null, item.isinCd(), item.srtnCd(), item.corpNm(), item.itmsNm(), item.crno()))
+                .map(item -> new Stock(null, item.isinCd(), item.srtnCd(), item.corpNm(), item.itmsNm(), item.crno(), BigDecimal.ZERO))
                 .collect(Collectors.toList());
 
         stockService.save(stocks);
