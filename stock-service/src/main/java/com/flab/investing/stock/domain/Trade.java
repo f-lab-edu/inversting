@@ -64,4 +64,8 @@ public class Trade extends BaseTimeEntity {
         this.status = StockStatus.ON_HOLD;
         this.tradeTime = LocalDateTime.now();
     }
+
+    public void rollback() {
+        this.status = StockStatus.ROOLBACK;
+    }
 }

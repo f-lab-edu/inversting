@@ -23,7 +23,8 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-batch'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation "org.springframework.cloud:spring-cloud-starter-openfeign:${openFeignVersion}"
     implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:${mybatisVersion}"
     implementation "com.github.gavlyukovskiy:p6spy-spring-boot-starter:${p6spyVersion}"
 
