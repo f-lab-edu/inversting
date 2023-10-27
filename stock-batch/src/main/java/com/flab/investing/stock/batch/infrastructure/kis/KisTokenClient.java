@@ -6,8 +6,10 @@ import com.flab.investing.stock.batch.infrastructure.kis.dto.KisTokenRequest;
 import com.flab.investing.stock.batch.infrastructure.kis.dto.KisTokenResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
+@Component
 @FeignClient(name = "kisToken", url= "${kis.url}")
 public interface KisTokenClient {
 

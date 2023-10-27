@@ -12,38 +12,43 @@ import org.mybatis.spring.batch.MyBatisPagingItemReader;
 import org.mybatis.spring.batch.builder.MyBatisBatchItemWriterBuilder;
 import org.mybatis.spring.batch.builder.MyBatisPagingItemReaderBuilder;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
+
+import java.util.HashMap;
 
 @Configuration
 @RequiredArgsConstructor
 public class KisPriceTokenStep {
 
     private final SqlSessionFactory sqlSessionFactory;
-    private final StepBuilderFactory stepBuilderFactory;
     private final StockService stockService;
     private final KisService kisService;
+    private final JobRepository jobRepository;
+    private final PlatformTransactionManager transactionManager;
 
     private Token token;
 
     @Bean
     public Step kisTokenSearchStep() {
-        return stepBuilderFactory.get("kisTokenSearchStep")
+        return new StepBuilder("kisTokenSearchStep", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
                     this.token = kisService.getToken();
                     return RepeatStatus.FINISHED;
-                })
+                }, transactionManager)
                 .build();
     }
 
     @Bean
     public Step getKisPriceStep() {
-        return stepBuilderFactory.get("getKisPriceStep")
-                .<Stock, StockPrice>chunk(1)
+        return new StepBuilder("getKisPriceStep", jobRepository)
+                .<Stock, StockPrice>chunk(100, transactionManager)
                 .reader(stockPriceReader())
                 .processor(stockStockPriceItemProcessor())
                 .writer(stockPriceWriter())
@@ -55,6 +60,7 @@ public class KisPriceTokenStep {
         return new MyBatisPagingItemReaderBuilder<Stock>()
                 .sqlSessionFactory(sqlSessionFactory)
                 .queryId("com.flab.investing.stock.batch.infrastructure.stock.StockMapper.findAll")
+                .pageSize(200)
                 .build();
     }
 
@@ -64,8 +70,11 @@ public class KisPriceTokenStep {
     }
 
     @Bean
-    public ItemWriter<StockPrice> stockPriceWriter() {
-        return stockPrices -> stockPrices.forEach(stockService::save);
+    public MyBatisBatchItemWriter<StockPrice> stockPriceWriter() {
+        return new MyBatisBatchItemWriterBuilder<StockPrice>()
+                .sqlSessionFactory(sqlSessionFactory)
+                .statementId("com.flab.investing.stock.batch.infrastructure.stock.StockMapper.updatePrice")
+                .build();
     }
 
 }

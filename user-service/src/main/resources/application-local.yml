@@ -1,0 +1,50 @@
+server:
+  port: 8080
+
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  cloud:
+    config:
+      enabled: false
+
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    show-sql: true
+
+    hibernate:
+      ddl-auto: create-drop
+
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  jwt:
+    secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
+    token:
+      access-expiration-time: 43200000
+      refresh-expiration-time: 604800000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

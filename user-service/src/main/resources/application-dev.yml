@@ -1,0 +1,9 @@
+server:
+  port: 8080
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+    import: optional:configserver:http://localhost:8000
