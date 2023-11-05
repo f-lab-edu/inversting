@@ -2,10 +2,12 @@ package com.flab.investing.stock.integration.job;
 
 import com.flab.investing.BatchTestSupport;
 import com.flab.investing.stock.batch.application.KisService;
+import com.flab.investing.stock.batch.application.StockIntradayService;
 import com.flab.investing.stock.batch.application.StockService;
 import com.flab.investing.stock.batch.domain.Stock;
 import com.flab.investing.stock.batch.domain.StockPrice;
 import com.flab.investing.stock.batch.domain.Token;
+import com.flab.investing.stock.batch.domain.repository.StockIntradayRepository;
 import com.flab.investing.stock.batch.infrastructure.kis.KisTokenRepository;
 import com.flab.investing.stock.batch.infrastructure.stock.StockMapper;
 import com.flab.investing.stock.batch.job.KisStockPriceConfig;
@@ -23,7 +25,6 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.math.BigDecimal;
 import java.util.Collections;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -37,6 +38,8 @@ import static org.mockito.BDDMockito.given;
         KisService.class,
         KisTokenRepository.class,
         KisAccessConfig.class,
+        StockIntradayService.class,
+        StockIntradayRepository.class
 })
 public class KisStockPriceConfigTest extends BatchTestSupport {
 
@@ -47,15 +50,19 @@ public class KisStockPriceConfigTest extends BatchTestSupport {
 
     private final JobLauncherTestUtils jobLauncherTestUtils;
     private final StockMapper stockMapper;
+    private final StockIntradayRepository stockIntradayRepository;
 
     public KisStockPriceConfigTest(final JobLauncherTestUtils jobLauncherTestUtils,
-                                   final StockMapper stockMapper) {
+                                   final StockMapper stockMapper,
+                                   final StockIntradayRepository stockIntradayRepository) {
         this.jobLauncherTestUtils = jobLauncherTestUtils;
         this.stockMapper = stockMapper;
+        this.stockIntradayRepository = stockIntradayRepository;
     }
 
     @BeforeEach
     void setUp() {
+        stockIntradayRepository.deleteAll();
         stockMapper.insert(Collections.singletonList(new Stock(
                 null,
                 "KR7000120006",
@@ -89,8 +96,8 @@ public class KisStockPriceConfigTest extends BatchTestSupport {
         JobExecution jobExecution = jobLauncherTestUtils.launchJob();
         assertThat(jobExecution.getStatus()).isEqualTo(BatchStatus.COMPLETED);
 
-        Stock stock = stockMapper.findAll().get(0);
+        Integer amount = Integer.parseInt(stockIntradayRepository.findAll().get(0).getAmount());
 
-        assertThat(stock.price()).isEqualTo(76100);
+        assertThat(amount).isEqualTo(76100);
     }
 }
