@@ -1,15 +1,16 @@
 package com.flab.investing.stock.batch.step;
 
 import com.flab.investing.stock.batch.application.KisService;
+import com.flab.investing.stock.batch.application.StockIntradayService;
 import com.flab.investing.stock.batch.application.StockService;
 import com.flab.investing.stock.batch.domain.Stock;
 import com.flab.investing.stock.batch.domain.StockPrice;
+import com.flab.investing.stock.batch.domain.StockPriceMapper;
 import com.flab.investing.stock.batch.domain.Token;
+import com.flab.investing.stock.batch.domain.entity.StockIntraday;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.batch.MyBatisBatchItemWriter;
 import org.mybatis.spring.batch.MyBatisPagingItemReader;
-import org.mybatis.spring.batch.builder.MyBatisBatchItemWriterBuilder;
 import org.mybatis.spring.batch.builder.MyBatisPagingItemReaderBuilder;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.repository.JobRepository;
@@ -21,7 +22,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Configuration
 @RequiredArgsConstructor
@@ -32,6 +34,7 @@ public class KisPriceTokenStep {
     private final KisService kisService;
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
+    private final StockIntradayService stockIntradayService;
 
     private Token token;
 
@@ -70,11 +73,15 @@ public class KisPriceTokenStep {
     }
 
     @Bean
-    public MyBatisBatchItemWriter<StockPrice> stockPriceWriter() {
-        return new MyBatisBatchItemWriterBuilder<StockPrice>()
-                .sqlSessionFactory(sqlSessionFactory)
-                .statementId("com.flab.investing.stock.batch.infrastructure.stock.StockMapper.updatePrice")
-                .build();
+    public ItemWriter<StockPrice> stockPriceWriter() {
+        return stockPrices -> {
+            List<StockIntraday> stockIntradaies = stockPrices.getItems()
+                    .stream()
+                    .map(StockPriceMapper::mapper)
+                    .collect(Collectors.toList());
+
+            stockIntradayService.saveAll(stockIntradaies);
+        };
     }
 
 }
