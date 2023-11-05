@@ -1,5 +1,6 @@
 package com.flab.investing;
 
+import com.flab.investing.stock.global.config.MongoDbConfig;
 import com.flab.investing.stock.global.config.MybatisConfig;
 import com.flab.investing.stock.global.config.OpenFeignConfig;
 import com.flab.investing.stock.global.config.SpringBatchConfig;
@@ -17,7 +18,8 @@ import org.springframework.test.context.TestConstructor;
         OpenFeignConfig.class,
         SpringBatchConfig.class,
         MybatisConfig.class,
-        SpringBatchConfig.class
+        SpringBatchConfig.class,
+        MongoDbConfig.class
 })
 public abstract class BatchTestSupport {
 }
