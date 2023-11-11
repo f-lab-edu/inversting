@@ -51,7 +51,9 @@
                  ON stock.id = trade.stock_id
          WHERE trade.tradetime = DATE_FORMAT(NOW(), '%Y%m%d')
            AND trade.status = 'SUCCESS'
-         GROUP BY rade.stock_id
+         GROUP BY trade.tradetime
+                , trade.status
+                , trade.stock_id
                 , stock.code
                 , stock.short_code
                 , stock.name
