@@ -12,7 +12,7 @@ import com.flab.investing.stock.controller.request.StockSellRequest;
 import com.flab.investing.stock.controller.response.StockInfoResponse;
 import com.flab.investing.stock.controller.response.StockPurchaseResponse;
 import com.flab.investing.stock.controller.response.StocksResponse;
-import com.flab.investing.stock.domain.Stock;
+import com.flab.investing.stock.domain.entity.Stock;
 import com.flab.investing.stock.infrastructure.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
