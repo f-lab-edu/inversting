@@ -1,4 +1,4 @@
-package com.flab.investing.stock.domain;
+package com.flab.investing.stock.domain.entity;
 
 import com.flab.investing.global.jpa.common.BaseTimeEntity;
 import jakarta.persistence.*;
