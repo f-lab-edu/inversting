@@ -2,18 +2,14 @@ package com.flab.investing.stock.acceptance;
 
 import com.flab.investing.global.error.exception.constant.ExceptionMessage;
 import com.flab.investing.stock.acceptance.step.StockControllerStep;
-import com.flab.investing.stock.domain.Stock;
-import com.flab.investing.stock.fixure.StockFixure;
+import com.flab.investing.stock.domain.entity.Stock;
+import com.flab.investing.stock.fixture.StockFixture;
 import com.flab.investing.stock.repository.StockRepository;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import io.restassured.response.ResponseBodyExtractionOptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,7 +24,7 @@ public class StockInfoAcceptanceTest extends AcceptanceTest{
     void setup() {
         super.setUp();
 
-        this.samsung = stockRepository.save(StockFixure.create("삼성전자", 1000));
+        this.samsung = stockRepository.save(StockFixture.create("삼성전자", 1000));
     }
 
     @DisplayName("주식 정보를 조회 한다.")
