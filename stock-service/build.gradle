@@ -30,24 +30,22 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+    implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:${awsCloudVersion}")
 
-    implementation "org.springframework.cloud:spring-cloud-starter-openfeign:${openFeignVersion}"
-    implementation 'org.springframework.boot:spring-boot-starter-amqp'
-    implementation "io.github.resilience4j:resilience4j-spring-boot3:${resilience4jSpringBootVersion}"
-    implementation "io.github.resilience4j:resilience4j-all:${resilience4jAllVersion}"
-    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
     implementation "com.github.gavlyukovskiy:p6spy-spring-boot-starter:${p6spyVersion}"
+    implementation "org.mapstruct:mapstruct:${mapStructVersion}"
     implementation "com.google.guava:guava:${guavaVersion}"
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-sqs'
 
-    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
-    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${mapStructBindingVersion}"
 
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
@@ -57,7 +55,7 @@ dependencies {
     testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
     asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
     testImplementation "de.flapdoodle.embed:de.flapdoodle.embed.mongo:${embededMongoVersion}"
-    testAnnotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
 }
 
 dependencyManagement {
@@ -66,28 +64,15 @@ dependencyManagement {
     }
 }
 
+
+tasks.named('bootBuildImage') {
+    builder = 'paketobuildpacks/builder-jammy-base:latest'
+}
+
 test {
     outputs.dir snippetsDir
     useJUnitPlatform()
     finalizedBy 'asciidoctor'
-}
-
-// Querydsl 설정부
-def generated = 'src/main/generated'
-
-// querydsl QClass 파일 생성 위치를 지정
-tasks.withType(JavaCompile) {
-    options.getGeneratedSourceOutputDirectory().set(file(generated))
-}
-
-// java source set 에 querydsl QClass 위치 추가
-sourceSets {
-    main.java.srcDirs += [ generated ]
-}
-
-// gradle clean 시에 QClass 디렉토리 삭제
-clean {
-    delete file(generated)
 }
 
 asciidoctor.doFirst {
