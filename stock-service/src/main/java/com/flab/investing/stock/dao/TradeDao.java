@@ -1,7 +1,7 @@
 package com.flab.investing.stock.dao;
 
 import com.flab.investing.stock.application.dto.TradeRequest;
-import com.flab.investing.stock.infrastructure.RabbitMqRepository;
+import com.flab.investing.stock.infrastructure.AwsSqsClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TradeDao {
 
-    private final RabbitMqRepository rabbitMqRepository;
+    private final AwsSqsClient awsSqsClient;
 
     public void orderSend(TradeRequest tradeRequest) {
         log.info("====== 주식 주문 요청 ====> {}", tradeRequest);
-        rabbitMqRepository.oderSend(tradeRequest);
+        awsSqsClient.orderSend(tradeRequest);
     }
 
 }
