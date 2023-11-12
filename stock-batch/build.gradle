@@ -24,7 +24,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-batch'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
-    implementation "org.springframework.cloud:spring-cloud-starter-openfeign:${openFeignVersion}"
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:${mybatisVersion}"
     implementation "com.github.gavlyukovskiy:p6spy-spring-boot-starter:${p6spyVersion}"
 
@@ -40,6 +41,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.batch:spring-batch-test'
     testImplementation "com.navercorp.fixturemonkey:fixture-monkey-starter:${fixturemonkeyVersion}"
+    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:4.9.3'
 }
 
 dependencyManagement {

@@ -36,4 +36,28 @@
         WHERE code = #{code}
     </update>
 
+    <select id="findStatisticsByToday" resultType="com.flab.investing.stock.batch.domain.DailyTrade">
+        SELECT trade.stock_id as stockId
+             , stock.code as code
+             , stock.short_code as shortCode
+             , stock.name as name
+             , stock.short_name as shortName
+             , MAX(trade.price) as stockHigh
+             , MIN(trade.price) as stockLower
+             , SUM(trade.count) as totalTrading
+             , SUM(trade.total_price) as totalAmount
+          FROM stock stock
+         INNER JOIN trade trade
+                 ON stock.id = trade.stock_id
+         WHERE trade.tradetime = DATE_FORMAT(NOW(), '%Y%m%d')
+           AND trade.status = 'SUCCESS'
+         GROUP BY trade.tradetime
+                , trade.status
+                , trade.stock_id
+                , stock.code
+                , stock.short_code
+                , stock.name
+                , stock.short_name
+    </select>
+
 </mapper>
