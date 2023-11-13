@@ -2,6 +2,7 @@ package com.flab.investing.stock.consumer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flab.investing.global.common.ObjectMapperSerializer;
 import com.flab.investing.global.error.exception.SerializerException;
 import com.flab.investing.stock.application.PurchaseService;
 import com.flab.investing.stock.application.SalesService;
@@ -12,6 +13,7 @@ import com.flab.investing.stock.evnet.dto.TradeException;
 import io.awspring.cloud.sqs.annotation.SqsListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -25,27 +27,19 @@ public class StockMessageListener {
     private final PurchaseService purchaseService;
     private final SalesService salesService;
     private final TradeService tradeService;
-    private final ObjectMapper objectMapper;
+    private final ObjectMapperSerializer objectMapperSerializer;
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    @SqsListener()
+    @SqsListener("${cloud.sqs.rollback.queue.name}")
     public void receiveMessage(final String message) {
         log.info("전달받은 데이터 : {}", message);
-        final TradeResponse tradeResponse = this.readValue(message, TradeResponse.class);
+        final TradeResponse tradeResponse = objectMapperSerializer.readValue(message, TradeResponse.class);
 
         if (!tradeService.isExistTradeAndHoldStatus(tradeResponse.tradeId())) {
             return;
         }
 
         this.process(tradeResponse);
-    }
-
-    private <T> T readValue(final String message, Class<T> clazz) {
-        try {
-            return objectMapper.readValue(message, clazz);
-        } catch (JsonProcessingException exception) {
-            throw new SerializerException();
-        }
     }
 
     private void process(final TradeResponse tradeResponse) {
