@@ -1,8 +1,6 @@
 package com.flab.investing.stock.infrastructure;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.flab.investing.global.error.exception.SerializerException;
+import com.flab.investing.global.common.ObjectMapperSerializer;
 import com.flab.investing.stock.application.dto.TradeRequest;
 import io.awspring.cloud.sqs.operations.SendResult;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
@@ -20,6 +18,7 @@ public class AwsSqsClient {
     private String queueName;
 
     private final SqsTemplate template;
+    private final ObjectMapperSerializer objectMapperSerializer;
 
     public SendResult<String> orderSend(final TradeRequest request) {
         log.info("message sent: {}", request);
@@ -27,15 +26,7 @@ public class AwsSqsClient {
                 .queue(queueName)
                 .messageGroupId(request.id())
                 .messageDeduplicationId(request.id())
-                .payload(serializer(request)));
-    }
-
-    private String serializer(final TradeRequest request) {
-        try {
-            return new ObjectMapper().writeValueAsString(request);
-        } catch (JsonProcessingException e) {
-            throw new SerializerException();
-        }
+                .payload(objectMapperSerializer.serializer(request)));
     }
 
 }
