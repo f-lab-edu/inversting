@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -19,6 +21,7 @@ public class TradeMessageService {
 
     public void purchaseSend(UserResponse userResponse, StockPurchaseRequest request, Long tradeId) {
         TradeRequest tradeRequest = new TradeRequest(
+                UUID.randomUUID().toString(),
                 tradeId,
                 request.stockId(),
                 userResponse.userId(),
@@ -32,6 +35,7 @@ public class TradeMessageService {
 
     public void sellSend(UserResponse userResponse, StockSellRequest request, Long tradeId) {
         TradeRequest tradeRequest = new TradeRequest(
+                UUID.randomUUID().toString(),
                 tradeId,
                 request.stockId(),
                 userResponse.userId(),

@@ -5,7 +5,7 @@ import com.flab.investing.stock.domain.DailyStockStatistic;
 import com.flab.investing.stock.domain.entity.DailyStock;
 import org.mapstruct.Mapper;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface DailyStockMapper {
 
     DailyStockStatistic toDailyStockStatistic(DailyStock dailyStock);

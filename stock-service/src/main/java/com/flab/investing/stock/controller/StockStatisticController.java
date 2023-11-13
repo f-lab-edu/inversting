@@ -1,11 +1,10 @@
 package com.flab.investing.stock.controller;
 
+import com.flab.investing.global.common.YearDateParser;
 import com.flab.investing.stock.application.DailyStockService;
 import com.flab.investing.stock.controller.request.DailyStatisticsRequest;
 import com.flab.investing.stock.controller.response.DailyStatisticsResponse;
 import com.flab.investing.stock.controller.response.ResponseCode;
-import com.flab.investing.stock.domain.DailyStockStatistic;
-import com.flab.investing.stock.domain.YearDateParser;
 import com.flab.investing.stock.domain.mappper.DailyStockMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +25,11 @@ public class StockStatisticController {
 
     @GetMapping("/statistic/daily")
     public ResponseEntity<DailyStatisticsResponse> dailyStatics(DailyStatisticsRequest request) {
-        final YearMonth yearMonth = new YearDateParser(request.searchDate()).getYearMonth();
+        final YearMonth yearMonth = YearDateParser.getYearMonth(request.searchDate());
         final LocalDate startDate = yearMonth.atDay(1);
         final LocalDate endDate = yearMonth.atEndOfMonth();
 
-        List<DailyStatisticsResponse.DailyStatisticsData> DailyStatisticsDatas = dailyStockService.findDailyStockStatistics(request.stockId(), startDate, endDate).stream()
+        List<DailyStatisticsResponse.DailyStatisticsData> DailyStatisticsData = dailyStockService.findDailyStockStatistics(request.stockId(), startDate, endDate).stream()
                 .map(dailyStockMapper::toDailyStatisticsResponse)
                 .collect(Collectors.toList());
 
@@ -38,8 +37,8 @@ public class StockStatisticController {
                 ResponseCode.SUCCESS.getCode(),
                 ResponseCode.SUCCESS.getMessage(),
                 request.searchDate(),
-                DailyStatisticsDatas.size(),
-                DailyStatisticsDatas
+                DailyStatisticsData.size(),
+                DailyStatisticsData
         ));
     }
 
