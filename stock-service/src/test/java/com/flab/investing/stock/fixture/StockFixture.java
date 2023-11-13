@@ -1,10 +1,10 @@
-package com.flab.investing.stock.fixure;
+package com.flab.investing.stock.fixture;
 
-import com.flab.investing.stock.domain.Stock;
+import com.flab.investing.stock.domain.entity.Stock;
 
 import java.util.Random;
 
-public class StockFixure {
+public class StockFixture {
 
     private static final Random random = new Random();
 

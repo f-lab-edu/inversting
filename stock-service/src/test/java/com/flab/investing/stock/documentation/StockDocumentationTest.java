@@ -4,7 +4,7 @@ import com.flab.investing.stock.application.StockService;
 import com.flab.investing.stock.application.TradeMessageService;
 import com.flab.investing.stock.application.TradeService;
 import com.flab.investing.stock.application.UserService;
-import com.flab.investing.stock.fixure.StockFixure;
+import com.flab.investing.stock.fixture.StockFixture;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,15 +35,15 @@ class StockDocumentationTest extends Documentation {
     @Test
     void stockList() {
         when(stockService.findAllPageable(any())).thenReturn(List.of(
-                StockFixure.create("삼성전자", 1000),
-                StockFixure.create("카카오", 2000),
-                StockFixure.create("현대자동차", 3000),
-                StockFixure.create("현대오토에버", 4000),
-                StockFixure.create("LGCNS", 5000),
-                StockFixure.create("삼성SDI", 6000),
-                StockFixure.create("네이버", 7000),
-                StockFixure.create("쌍용정보", 8000),
-                StockFixure.create("KT", 9000)
+                StockFixture.create("삼성전자", 1000),
+                StockFixture.create("카카오", 2000),
+                StockFixture.create("현대자동차", 3000),
+                StockFixture.create("현대오토에버", 4000),
+                StockFixture.create("LGCNS", 5000),
+                StockFixture.create("삼성SDI", 6000),
+                StockFixture.create("네이버", 7000),
+                StockFixture.create("쌍용정보", 8000),
+                StockFixture.create("KT", 9000)
         ));
 
         RestAssured

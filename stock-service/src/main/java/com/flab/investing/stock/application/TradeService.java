@@ -3,7 +3,7 @@ package com.flab.investing.stock.application;
 import com.flab.investing.global.error.exception.NotFoundTradeException;
 import com.flab.investing.stock.application.dto.TradeData;
 import com.flab.investing.stock.common.DivisionStatus;
-import com.flab.investing.stock.domain.Trade;
+import com.flab.investing.stock.domain.entity.Trade;
 import com.flab.investing.stock.repository.TradeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
