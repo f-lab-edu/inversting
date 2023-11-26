@@ -2,7 +2,6 @@ name: githubAction
 on:
   push:
     branches:
-      - feat/ci-cd
       - develop
 env:
   NAME: user-service
