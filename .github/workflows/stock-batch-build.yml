@@ -22,7 +22,7 @@ jobs:
         with:
           java-version: 17
 
-      - name: Start MongoDB
+      - name: 몽고디비를 설치한다.
         uses: supercharge/mongodb-github-action@1.10.0
         with:
           mongodb-version: ${{ matrix.mongodb-version }}
