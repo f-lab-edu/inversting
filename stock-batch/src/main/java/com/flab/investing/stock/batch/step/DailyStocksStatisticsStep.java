@@ -20,6 +20,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 @Configuration
 @RequiredArgsConstructor
@@ -43,9 +44,12 @@ public class DailyStocksStatisticsStep {
 
     @Bean
     public MyBatisPagingItemReader<DailyTrade> dailyStockReader() {
+        String searchDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+
         return new MyBatisPagingItemReaderBuilder<DailyTrade>()
                 .sqlSessionFactory(sqlSessionFactory)
                 .queryId("com.flab.investing.stock.batch.infrastructure.stock.StockMapper.findStatisticsByToday")
+                .parameterValues(Map.of("searchDate", searchDate))
                 .pageSize(1000)
                 .build();
     }

@@ -5,6 +5,7 @@ import com.flab.investing.stock.batch.domain.Stock;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface StockMapper {
@@ -13,5 +14,5 @@ public interface StockMapper {
 
     List<Stock> findAll();
 
-    List<DailyTrade> findStatisticsByToday();
+    List<DailyTrade> findStatisticsByToday(Map<String, Object> parameter);
 }
