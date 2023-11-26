@@ -32,7 +32,7 @@ public class StockInfoAcceptanceTest extends AcceptanceTest{
     void stockInfo() {
         ResponseBodyExtractionOptions response = StockControllerStep.stockInfoSearch(samsung.getId()).body();
 
-        assertThat(response.jsonPath().getString("data.name")).isEqualTo("삼성전자");
+        assertThat(response.jsonPath().getString("name")).isEqualTo("삼성전자");
     }
 
     @DisplayName("없는 주식 정보조회시, 에러를 반환한다.")

@@ -9,9 +9,7 @@ import com.flab.investing.stock.application.dto.TradeData;
 import com.flab.investing.stock.common.DivisionStatus;
 import com.flab.investing.stock.controller.request.StockPurchaseRequest;
 import com.flab.investing.stock.controller.request.StockSellRequest;
-import com.flab.investing.stock.controller.response.StockInfoResponse;
-import com.flab.investing.stock.controller.response.StockPurchaseResponse;
-import com.flab.investing.stock.controller.response.StocksResponse;
+import com.flab.investing.stock.controller.response.*;
 import com.flab.investing.stock.domain.entity.Stock;
 import com.flab.investing.stock.infrastructure.response.UserResponse;
 import lombok.RequiredArgsConstructor;
@@ -36,10 +34,16 @@ public class StockController {
     private final TradeMessageService tradeMessageService;
 
     @GetMapping
-    public ResponseEntity<List<StocksResponse>> stockList(@PageableDefault(size = 7) Pageable pageable) {
-        return ResponseEntity.ok(stockService.findAllPageable(pageable).stream()
+    public ResponseEntity<StockListInfo> stockList(@PageableDefault(size = 7) Pageable pageable) {
+        List<StocksResponse> stocksResponses = stockService.findAllPageable(pageable).stream()
                 .map(stock -> new StocksResponse(stock.getId(), stock.getCode(), stock.getName(), stock.getPrice()))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(new StockListInfo(
+                SUCCESS.getCode(),
+                SUCCESS.getMessage(),
+                stocksResponses
+        ));
     }
 
     @GetMapping("/{stockId}")
@@ -47,6 +51,8 @@ public class StockController {
         Stock stock = stockService.findByStockId(stockId);
 
         return ResponseEntity.ok(new StockInfoResponse(
+                SUCCESS.getCode(),
+                SUCCESS.getMessage(),
                 stock.getId(),
                 stock.getName(),
                 stock.getCorporationCode(),

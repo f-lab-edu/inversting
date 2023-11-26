@@ -1,13 +1,13 @@
 package com.flab.investing.stock.documentation.step;
 
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.restdocs.payload.RequestFieldsSnippet;
 import org.springframework.restdocs.payload.ResponseFieldsSnippet;
 import org.springframework.restdocs.request.QueryParametersSnippet;
 import org.springframework.restdocs.restassured.RestDocumentationFilter;
 
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
@@ -22,12 +22,12 @@ public class StockListStep {
                                 .removePort(),
                         prettyPrint()),
                 preprocessResponse(prettyPrint()),
-                requestFieldsSnippet(),
+                queryParametersSnippet(),
                 responseFieldsSnippet()
         );
     }
 
-    private static QueryParametersSnippet requestFieldsSnippet() {
+    private static QueryParametersSnippet queryParametersSnippet() {
         return queryParameters(
                 parameterWithName("size").description("페이지사이즈"),
                 parameterWithName("offset").description("시작페이지")

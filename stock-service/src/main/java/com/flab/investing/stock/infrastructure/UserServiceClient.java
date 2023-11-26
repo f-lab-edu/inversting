@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Component
-@FeignClient(name = "userService")
+@FeignClient(name = "userService", url="${userService.url}")
 public interface UserServiceClient {
 
-    @GetMapping("${userService.url}/users")
+    @GetMapping("/users")
     UserResponse tokenValidate(@RequestBody UserRequest request);
 
 }

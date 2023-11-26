@@ -4,6 +4,8 @@ import com.flab.investing.stock.application.StockService;
 import com.flab.investing.stock.application.TradeMessageService;
 import com.flab.investing.stock.application.TradeService;
 import com.flab.investing.stock.application.UserService;
+import com.flab.investing.stock.controller.response.ResponseCode;
+import com.flab.investing.stock.controller.response.StockListInfo;
 import com.flab.investing.stock.fixture.StockFixture;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.DisplayName;
@@ -48,11 +50,9 @@ class StockDocumentationTest extends Documentation {
 
         RestAssured
                 .given().log().all()
-                .queryParam("size", 7)
-                .queryParam("offset", 0)
                 .filter(stockListDocumentationFilter("주식 리스트 조회"))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/stocks")
+                .when()
+                .get("/stocks?size=7&offset=0")
                 .then().log().all()
                 .extract();
     }
