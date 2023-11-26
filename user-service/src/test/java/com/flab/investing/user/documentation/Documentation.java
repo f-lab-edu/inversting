@@ -18,10 +18,8 @@ import static org.springframework.restdocs.restassured.RestAssuredRestDocumentat
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(RestDocumentationExtension.class)
+@Transactional
 public class Documentation {
-
-    @Autowired
-    private DataCleanUp dataCleanUp;
 
     @LocalServerPort
     int port;
@@ -36,11 +34,5 @@ public class Documentation {
                 .addFilter(documentationConfiguration(restDocumentation))
                 .build();
     }
-
-    @Transactional
-    public void execute() {
-        dataCleanUp.execute();
-    }
-
 
 }
