@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: stock-batch
+
+  profiles:
+    active: local
