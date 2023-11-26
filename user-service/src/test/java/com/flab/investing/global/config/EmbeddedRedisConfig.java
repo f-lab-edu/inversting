@@ -9,7 +9,6 @@ import redis.embedded.RedisServer;
 
 import java.io.IOException;
 
-@Profile("test")
 @Configuration
 public class EmbeddedRedisConfig {
     private RedisServer redisServer;

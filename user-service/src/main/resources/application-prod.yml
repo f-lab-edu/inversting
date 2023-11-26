@@ -1,9 +1,6 @@
-server:
-  port: 8080
-
 spring:
   config:
     activate:
       on-profile: prod
 
-    import: optional:configserver:https://investing.o-r.kr
+    import: "optional:configserver:https://investing.o-r.kr"
