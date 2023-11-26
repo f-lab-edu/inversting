@@ -1,6 +1,6 @@
 spring:
   config:
     activate:
-      on-profile: dev
+      on-profile: prod
 
     import: "optional:configserver:https://investing.o-r.kr"

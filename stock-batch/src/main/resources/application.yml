@@ -1,9 +1,6 @@
-server:
-  port: 8080
-
 spring:
   application:
-    name: user-service
+    name: stock-batch
 
   profiles:
     active: local

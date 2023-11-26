@@ -7,9 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
-@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Transactional
 public class AcceptanceTest {
 
     @LocalServerPort
@@ -23,6 +24,10 @@ public class AcceptanceTest {
     public void setUp() {
         RestAssured.port = port;
         dataCleanUp.execute();
+        redisDataCleanUp.execute();
+    }
+
+    public void redisCleanup() {
         redisDataCleanUp.execute();
     }
 }
