@@ -48,7 +48,6 @@ dependencies {
     asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 }
 
-<<<<<<< HEAD
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
@@ -56,7 +55,6 @@ dependencyManagement {
 }
 
 tasks.named('test') {
-
     useJUnitPlatform()
     finalizedBy 'asciidoctor'
     finalizedBy 'jacocoTestReport'
@@ -80,7 +78,6 @@ asciidoctor.doFirst {
 }
 
 asciidoctor {
-    inputs.dir snippetsDir
     configurations 'asciidoctorExtensions'
     dependsOn test
 }
