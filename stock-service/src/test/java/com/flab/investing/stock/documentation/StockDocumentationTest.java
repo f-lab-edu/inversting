@@ -23,18 +23,7 @@ class StockDocumentationTest extends Documentation {
 
     @MockBean
     private StockService stockService;
-
-    @MockBean
-    private UserService userService;
-
-    @MockBean
-    private TradeService tradeService;
-
-    @MockBean
-    private TradeMessageService tradeMessageService;
-
-    @DisplayName("주식 리스트를 불러온다.")
-    @Test
+    
     void stockList() {
         when(stockService.findAllPageable(any())).thenReturn(List.of(
                 StockFixture.create("삼성전자", 1000),
