@@ -8,4 +8,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'stock'
+rootProject.name = 'stock-service'
