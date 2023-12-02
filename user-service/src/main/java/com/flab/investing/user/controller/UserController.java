@@ -60,22 +60,26 @@ public class UserController {
      */
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
-        return ResponseEntity.ok(authenticationService.login(request));
+        LoginResponse response = authenticationService.login(request);
+
+        System.out.println(response);
+
+        return ResponseEntity.ok(response);
     }
 
     /**
      * 로그인이 되어 있으면 회원 이름을 반환한다.
      *
-     * @param request
+     * @param accessToken
      * @return
      */
     @GetMapping
-    public ResponseEntity<UserResponse> validate(@RequestBody JwtRequest request) {
-        if (!jwtTokenProvider.validateToken(request.accessToken())) {
+    public ResponseEntity<UserResponse> validate(@RequestHeader String accessToken) {
+        if (!jwtTokenProvider.validateToken(accessToken)) {
             throw new InvalidJwtException();
         }
 
-        String userId = jwtTokenProvider.getRedisSession(request.accessToken());
+        String userId = jwtTokenProvider.getRedisSession(accessToken);
 
         if (Objects.isNull(userId)) {
             throw new NotFoundSessionException();
