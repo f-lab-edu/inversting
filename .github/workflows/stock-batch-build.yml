@@ -7,6 +7,7 @@ env:
   NAME: stock-batch
   REPO: investing-stock-batch
   working-directory: ./stock-batch
+  S3_BUCKET_NAME: investing-batch
 
 jobs:
   build:
@@ -36,16 +37,19 @@ jobs:
         run: ./gradlew build
         working-directory: ${{ env.working-directory }}
 
-      - name: 도커허브에 로그인한다.
-        uses: docker/login-action@v1
-        with:
-          username: ${{secrets.DOCKERHUB_USERNAME}}
-          password: ${{secrets.DOCKERHUB_TOKEN}}
+      - name: 파일을 압축한다.
+        run: zip -qq -r ./$GITHUB_SHA.zip .
+        shell: bash
 
-      - name: 도커 빌드
-        uses: docker/build-push-action@v2
+      - name: AWS 암호화 작업
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          context: ./stock-batch
-          file: ./stock-batch/Dockerfile
-          push: true
-          tags: ${{secrets.DOCKERHUB_USERNAME}}/${{env.REPO}}:latest
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Upload to S3  #3	# S3에 업로드
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$NAME/$GITHUB_SHA.zip
+
+      - name: 코드 디플로이를 실행한다.
+        run: aws deploy create-deployment --application-name investing-batch-deploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name investing-batch-deploy --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$NAME/$GITHUB_SHA.zip
