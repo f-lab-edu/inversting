@@ -1,6 +1,5 @@
 package com.flab.investing.user.acceptance.step;
 
-import com.flab.investing.user.controller.request.JwtRequest;
 import com.flab.investing.user.controller.request.LoginRequest;
 import com.flab.investing.user.controller.request.RegisterRequest;
 import io.restassured.RestAssured;
@@ -30,10 +29,10 @@ public class UserControllerStep {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> validate(JwtRequest request) {
+    public static ExtractableResponse<Response> validate(String accessToken) {
         return RestAssured
                 .given().log().all()
-                .body(request)
+                .header("accessToken", accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/users")
                 .then().log().all()

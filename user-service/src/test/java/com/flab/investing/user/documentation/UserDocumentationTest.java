@@ -4,7 +4,6 @@ import com.flab.investing.global.error.constant.ExceptionCode;
 import com.flab.investing.support.jwt.JwtTokenProvider;
 import com.flab.investing.user.application.AuthenticationService;
 import com.flab.investing.user.application.UserService;
-import com.flab.investing.user.controller.request.JwtRequest;
 import com.flab.investing.user.controller.request.LoginRequest;
 import com.flab.investing.user.controller.request.RegisterRequest;
 import com.flab.investing.user.controller.response.LoginResponse;
@@ -36,14 +35,14 @@ class UserDocumentationTest extends Documentation {
     private RegisterRequest registerRequest;
     private LoginResponse loginResponse;
     private LoginRequest loginRequest;
-    private JwtRequest jwtRequest;
+    private String accessToken;
 
     @BeforeEach
     void setup() {
         this.registerRequest = new RegisterRequest("flab@flab.com", "flab", "flab", "에프랩");
         this.loginRequest = new LoginRequest("flab@flab.com", "flab");
         this.loginResponse = new LoginResponse(ExceptionCode.SUCCESS.getCode(), ExceptionCode.SUCCESS.getDescription(), "accessToken", "refreshToken");
-        this.jwtRequest = new JwtRequest("accessToken");
+        this.accessToken = "accessToken";
     }
 
     @DisplayName("신규 회원을 등록한다.")
@@ -85,7 +84,7 @@ class UserDocumentationTest extends Documentation {
         RestAssured
                 .given(specification).log().all()
                 .filter(userInfoDocumentationFilter("회원정보 조회"))
-                .body(jwtRequest)
+                .header("accessToken", accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/users")
                 .then().log().all().extract();

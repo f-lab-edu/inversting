@@ -8,7 +8,6 @@ import com.flab.investing.global.error.exception.NotMatchPasswordException;
 import com.flab.investing.support.jwt.JwtTokenProvider;
 import com.flab.investing.user.application.AuthenticationService;
 import com.flab.investing.user.application.UserService;
-import com.flab.investing.user.controller.request.JwtRequest;
 import com.flab.investing.user.controller.request.LoginRequest;
 import com.flab.investing.user.controller.request.RegisterRequest;
 import com.flab.investing.user.controller.response.LoginResponse;
