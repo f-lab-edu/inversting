@@ -27,6 +27,9 @@ public class KisTokenRepository {
     }
 
     public KisPriceDetail findPrice(final String accessToken, final String code) {
+        // 거래 요청시간 제한으로 슬로우를 검.
+        sleep();
+
         final KisPriceResponse response = kisTokenClient.getPrice(
                 kisAccessProperties.getSecretKey(),
                 kisAccessProperties.getAppKey(),
@@ -36,6 +39,12 @@ public class KisTokenRepository {
                 code);
 
         return response.output();
+    }
+
+    private void sleep() {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ignored) { }
     }
 
 }
