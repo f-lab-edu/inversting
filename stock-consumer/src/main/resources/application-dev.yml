@@ -3,4 +3,4 @@ spring:
     activate:
       on-profile: dev
 
-    import: "optional:configserver:https://investing.o-r.kr"
+    import: "optional:configserver:https://investing-config.p-e.kr/"
