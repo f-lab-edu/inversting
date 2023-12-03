@@ -1,5 +1,6 @@
 package com.flab.investing.user.application;
 
+import com.flab.investing.global.error.exception.NotFoundUserIdException;
 import com.flab.investing.user.controller.request.RegisterRequest;
 import com.flab.investing.user.domain.User;
 import com.flab.investing.user.infrastructure.UserRepository;
@@ -31,9 +32,9 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public Long getUserId(String userId) {
-        return userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이디입니다."))
+    public Long getUserId(String userEmail) {
+        return userRepository.findByUserId(userEmail)
+                .orElseThrow(NotFoundUserIdException::new)
                 .getId();
     }
 

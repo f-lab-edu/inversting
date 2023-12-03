@@ -78,17 +78,17 @@ public class UserController {
             throw new InvalidJwtException();
         }
 
-        String userId = jwtTokenProvider.getRedisSession(accessToken);
+        final String userEmail = jwtTokenProvider.getRedisSession(accessToken);
 
-        if (Objects.isNull(userId)) {
+        if (Objects.isNull(userEmail)) {
             throw new NotFoundSessionException();
         }
 
         return ResponseEntity.ok(new UserResponse(
                 ExceptionCode.SUCCESS.getCode(),
                 ExceptionCode.SUCCESS.getDescription(),
-                userService.getUserId(userId),
-                userId));
+                userService.getUserId(userEmail),
+                userEmail));
     }
 
 }

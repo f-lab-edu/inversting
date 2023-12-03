@@ -4,7 +4,7 @@ public record UserResponse(
         String code,
         String message,
         Long id,
-        String userId
+        String userEmail
 ) {
 
 }
