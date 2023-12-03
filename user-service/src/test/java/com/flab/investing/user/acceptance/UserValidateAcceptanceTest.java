@@ -36,7 +36,7 @@ class UserValidateAcceptanceTest extends AcceptanceTest{
 
         assertThat(result.jsonPath().getString("code")).isEqualTo(ExceptionCode.SUCCESS.getCode());
         assertThat(result.jsonPath().getString("message")).isEqualTo(ExceptionCode.SUCCESS.getDescription());
-        assertThat(result.jsonPath().getString("userId")).isEqualTo(registerRequest.userId());
+        assertThat(result.jsonPath().getString("userEmail")).isEqualTo(registerRequest.userId());
     }
 
     @DisplayName("레디스에 로그인 되어 있지 않을때, 에러를 반환한다.")

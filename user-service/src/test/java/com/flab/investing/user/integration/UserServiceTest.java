@@ -1,5 +1,7 @@
 package com.flab.investing.user.integration;
 
+import com.flab.investing.global.error.exception.NotFoundUserIdException;
+import com.flab.investing.global.error.exception.constant.ExceptionMessage;
 import com.flab.investing.user.application.UserService;
 import com.flab.investing.user.controller.request.RegisterRequest;
 import com.flab.investing.user.domain.User;
@@ -48,8 +50,8 @@ public class UserServiceTest extends ServiceTest {
         assertThatThrownBy(() -> {
                     userService.getUserId("flab@naver.com");
                 })
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 아이디입니다.");
+                .isInstanceOf(NotFoundUserIdException.class)
+                .hasMessage(ExceptionMessage.NOTFOUND_USER.getMessage());
 
     }
 

@@ -38,7 +38,7 @@ public class UserInfoStep {
         return responseFields(
                 fieldWithPath("code").type(JsonFieldType.STRING).description("상태코드"),
                 fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                fieldWithPath("userId").type(JsonFieldType.STRING).description("유저 아이디"),
+                fieldWithPath("userEmail").type(JsonFieldType.STRING).description("유저 아이디"),
                 fieldWithPath("id").type(JsonFieldType.NUMBER).description("아이디")
         );
     }
