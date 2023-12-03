@@ -16,7 +16,7 @@ public class UserTokenDao {
 
     public UserResponse tokenSend(final UserRequest request) {
         log.info("user token 확인을 위한 ===> {}", request);
-        UserResponse userResponse = userServiceClient.tokenValidate(request);
+        UserResponse userResponse = userServiceClient.tokenValidate(request.accessToken());
         log.info("user token 결과 =====> {} ", userResponse);
         return userResponse;
     }

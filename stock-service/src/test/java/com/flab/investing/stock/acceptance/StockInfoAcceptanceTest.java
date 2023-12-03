@@ -4,6 +4,8 @@ import com.flab.investing.global.error.exception.constant.ExceptionMessage;
 import com.flab.investing.stock.acceptance.step.StockControllerStep;
 import com.flab.investing.stock.domain.entity.Stock;
 import com.flab.investing.stock.fixture.StockFixture;
+import com.flab.investing.stock.fixture.StockIntradayFixture;
+import com.flab.investing.stock.repository.StockIntradayRepository;
 import com.flab.investing.stock.repository.StockRepository;
 import io.restassured.response.ResponseBodyExtractionOptions;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +20,9 @@ public class StockInfoAcceptanceTest extends AcceptanceTest{
     @Autowired
     private StockRepository stockRepository;
 
+    @Autowired
+    private StockIntradayRepository stockIntradayRepository;
+
     private Stock samsung;
 
     @BeforeEach
@@ -25,6 +30,7 @@ public class StockInfoAcceptanceTest extends AcceptanceTest{
         super.setUp();
 
         this.samsung = stockRepository.save(StockFixture.create("삼성전자", 1000));
+        this.stockIntradayRepository.save(StockIntradayFixture.create(samsung.getId(), samsung.getPrice()));
     }
 
     @DisplayName("주식 정보를 조회 한다.")

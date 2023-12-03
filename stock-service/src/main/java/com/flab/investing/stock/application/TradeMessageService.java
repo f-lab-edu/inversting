@@ -24,7 +24,7 @@ public class TradeMessageService {
                 UUID.randomUUID().toString(),
                 tradeId,
                 request.stockId(),
-                userResponse.userId(),
+                userResponse.id(),
                 request.stockOfAmount(),
                 request.stockCount(),
                 TradeCode.BUY
@@ -38,7 +38,7 @@ public class TradeMessageService {
                 UUID.randomUUID().toString(),
                 tradeId,
                 request.stockId(),
-                userResponse.userId(),
+                userResponse.id(),
                 request.stockOfAmount(),
                 request.stockCount(),
                 TradeCode.SELL

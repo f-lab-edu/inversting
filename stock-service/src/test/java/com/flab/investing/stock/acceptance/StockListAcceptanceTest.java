@@ -4,6 +4,8 @@ import com.flab.investing.stock.acceptance.step.StockControllerStep;
 import com.flab.investing.stock.controller.response.ResponseCode;
 import com.flab.investing.stock.domain.entity.Stock;
 import com.flab.investing.stock.fixture.StockFixture;
+import com.flab.investing.stock.fixture.StockIntradayFixture;
+import com.flab.investing.stock.repository.StockIntradayRepository;
 import com.flab.investing.stock.repository.StockRepository;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,6 +23,9 @@ public class StockListAcceptanceTest extends AcceptanceTest{
 
     @Autowired
     private StockRepository stockRepository;
+
+    @Autowired
+    private StockIntradayRepository stockIntradayRepository;
 
     @BeforeEach
     void setup() {
@@ -37,7 +43,10 @@ public class StockListAcceptanceTest extends AcceptanceTest{
                 StockFixture.create("KT", 9000)
         );
 
-        stockRepository.saveAll(stocks);
+        List<Stock> saveStocks = stockRepository.saveAll(stocks);
+        this.stockIntradayRepository.saveAll(saveStocks.stream()
+                .map(stock -> StockIntradayFixture.create(stock.getId(), stock.getPrice()))
+                .collect(Collectors.toList()));
     }
 
     @DisplayName("주식 리스트를 보여준다.")

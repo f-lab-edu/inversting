@@ -1,12 +1,11 @@
 package com.flab.investing.stock.documentation;
 
-import com.flab.investing.stock.application.StockService;
-import com.flab.investing.stock.application.TradeMessageService;
-import com.flab.investing.stock.application.TradeService;
-import com.flab.investing.stock.application.UserService;
+import com.flab.investing.stock.application.*;
 import com.flab.investing.stock.controller.response.ResponseCode;
 import com.flab.investing.stock.controller.response.StockListInfo;
+import com.flab.investing.stock.domain.entity.StockIntraday;
 import com.flab.investing.stock.fixture.StockFixture;
+import com.flab.investing.stock.fixture.StockIntradayFixture;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +22,9 @@ class StockDocumentationTest extends Documentation {
 
     @MockBean
     private StockService stockService;
+
+    @MockBean
+    private StockIntraDayService stockIntraDayService;
     
     void stockList() {
         when(stockService.findAllPageable(any())).thenReturn(List.of(
@@ -36,6 +38,7 @@ class StockDocumentationTest extends Documentation {
                 StockFixture.create("쌍용정보", 8000),
                 StockFixture.create("KT", 9000)
         ));
+        when(stockIntraDayService.findByStockId(any())).thenReturn(StockIntradayFixture.create(1L, 3000));
 
         RestAssured
                 .given().log().all()
