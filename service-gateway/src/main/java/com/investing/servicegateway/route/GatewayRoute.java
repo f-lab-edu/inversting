@@ -1,12 +1,17 @@
 package com.investing.servicegateway.route;
 
+import com.investing.servicegateway.global.config.ServiceUrlConfig;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@RequiredArgsConstructor
 public class GatewayRoute {
+
+    private final ServiceUrlConfig serviceUrlConfig;
 
     @Bean
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
@@ -14,11 +19,11 @@ public class GatewayRoute {
                 .route("user-service", routes -> routes.path("/users/**")
                         .filters(f -> f.circuitBreaker(c -> c.setName("user-service-circuitBreaker")
                                 .setFallbackUri("forward:/fallback")))
-                        .uri("http://localhost:8080"))
+                        .uri(serviceUrlConfig.getUserServiceUrl()))
                 .route("stock-service", routes -> routes.path("/stocks/**")
                         .filters(f -> f.circuitBreaker(c -> c.setName("stock-service-circuitBreaker")
                                 .setFallbackUri("forward:/fallback")))
-                        .uri("http://localhost:8089"))
+                        .uri(serviceUrlConfig.getStockServiceUrl()))
                 .build();
     }
 
