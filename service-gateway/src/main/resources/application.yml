@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: service-gateway
+
+  profiles:
+    active: local

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.flab.investing.stock.batch.infrastructure.stock.StockMapper">
+    <insert id="insert" parameterType="com.flab.investing.stock.batch.domain.Stock">
+        INSERT INTO stock (
+            code,
+            short_code,
+            name,
+            short_name,
+            corporation_code )
+        VALUES
+        <foreach collection="list" item="item" open="(" close=")" separator=") , (">
+            #{item.code},
+            #{item.shortCode},
+            #{item.name},
+            #{item.shortName},
+            #{item.corporationCode}
+        </foreach>
+    </insert>
+
+    <select id="findAll" resultType="com.flab.investing.stock.batch.domain.Stock">
+        SELECT id,
+               code,
+               short_code,
+               name,
+               price,
+               short_name,
+               corporation_code
+          FROM stock
+    </select>
+
+    <update id="updatePrice" parameterType="com.flab.investing.stock.batch.domain.StockPrice">
+        UPDATE stock
+           SET price = #{amount}
+        WHERE code = #{code}
+    </update>
+
+    <select id="findStatisticsByToday" parameterType="java.util.HashMap" resultType="com.flab.investing.stock.batch.domain.DailyTrade">
+        SELECT trade.stock_id as stockId
+             , stock.code as code
+             , stock.short_code as shortCode
+             , stock.name as name
+             , stock.short_name as shortName
+             , MAX(trade.price) as stockHigh
+             , MIN(trade.price) as stockLower
+             , SUM(trade.count) as totalTrading
+             , SUM(trade.total_price) as totalAmount
+          FROM stock stock
+         INNER JOIN trade trade
+                 ON stock.id = trade.stock_id
+         WHERE trade.tradetime = #{searchDate}
+           AND trade.status = 'SUCCESS'
+         GROUP BY trade.tradetime
+                , trade.status
+                , trade.stock_id
+                , stock.code
+                , stock.short_code
+                , stock.name
+                , stock.short_name
+    </select>
+
+</mapper>

@@ -1,0 +1,11 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ec2-user/batch
+    overwrite: yes
+permissions:
+  - object: /home/ec2-user/batch
+    pattern: "**"
+    owner: ec2-user
+    group: ec2-user
