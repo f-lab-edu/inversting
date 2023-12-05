@@ -9,15 +9,15 @@
 
 - JDK 17
 - Spring Boot, Spring Batch, JPA
-- Redis
-- Kafka
-- Mysql
+- Elastic Cache
+- AWS SQS 
+- RDS (Mysql)
 - gradle
 - intelliJ
 
 ## 예상 아키텍처
 
-![image](https://github.com/NohYeongHun/zero-gifticon/assets/24979159/46caee93-130e-4571-a469-517a1380586e)
+![image](https://github.com/f-lab-edu/inversting/assets/24979159/8873e02f-4853-4ce0-975b-69c732652d82)
 
 ## ERD 
 
